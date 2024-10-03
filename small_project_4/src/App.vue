@@ -1,13 +1,13 @@
 <template>
   <main class="p-5 font-sans">
     <div class="flex gap-5 py-5 overflow-auto">
-      <div v-for="list in lists" :key="list.id">
+      <div v-for="(list, listIndex) in lists" :key="list.id">
         <div class="bg-gray-100 p-3 rounded-lg min-w-[250px] flex flex-col">
           <h2 class="font-medium mb-2">{{ list.title }}</h2>
 
           <Draggable :list="list.cards" group="cards" item-key="id">
             <template #item="{ element }">
-              <div class="bg-white p-2 my-2 rounded shadow cursor-pointer">
+              <div class="bg-white p-2 my-2 rounded shadow cursor-pointer" @click="openModal(listIndex, element)">
                 <span class="text-sm font-medium">{{ element.title }}</span>
                 <p class="text-xs text-gray-400">
                   {{ element.description }}
@@ -18,7 +18,7 @@
 
           <button
             class="w-full bg-transparent rounded hover:bg-white text-gray-500 p-2 text-left mt-2 text-sm font-medium"
-            @click="openModal(list.id)"
+            @click="openModal(listIndex)"
           >
             + Add Card
           </button>
@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <ModalDialog :is-open="isModalOpen" @close="closeModal" />
+    <ModalDialog :is-open="isModalOpen" @close="closeModal" :card="editingCard" :mode="modalMode" @save="saveCard" />
   </main>
 </template>
 
